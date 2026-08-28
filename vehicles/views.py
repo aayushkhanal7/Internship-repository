@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 
 from .models import Vehicle
 from .serializers import VehicleSerializer
+from .permissions import IsVehicleOwnerOrReadOnly
 
 
 class VehicleListCreateView(generics.ListCreateAPIView):
@@ -16,4 +17,7 @@ class VehicleListCreateView(generics.ListCreateAPIView):
 class VehicleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsVehicleOwnerOrReadOnly,
+    ]
