@@ -41,6 +41,7 @@ INSTALLED_APPS = [
         'users',
         'vehicles',
         'django_filters',
+        'bookings',
 ]
 
 MIDDLEWARE = [
