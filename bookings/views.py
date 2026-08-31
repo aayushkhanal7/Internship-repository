@@ -14,7 +14,11 @@ class BookingListCreateView(generics.ListCreateAPIView):
         return Booking.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        booking = serializer.save(user=self.request.user)
+
+        from .emails import send_booking_created_email
+
+        send_booking_created_email(booking)
 
 
 class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -49,6 +53,10 @@ class BookingConfirmView(APIView):
         booking.status = "CONFIRMED"
         booking.save(update_fields=["status", "updated_at"])
 
+        from .emails import send_booking_confirmed_email
+
+        send_booking_confirmed_email(booking)
+
         return Response(
             BookingSerializer(booking).data,
             status=status.HTTP_200_OK,
@@ -78,6 +86,10 @@ class BookingCancelView(APIView):
 
         booking.status = "CANCELLED"
         booking.save(update_fields=["status", "updated_at"])
+
+        from .emails import send_booking_cancelled_email
+
+        send_booking_cancelled_email(booking)
 
         return Response(
             BookingSerializer(booking).data,
