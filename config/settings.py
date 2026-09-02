@@ -42,10 +42,13 @@ INSTALLED_APPS = [
         'vehicles',
         'django_filters',
         'bookings',
-	'contact',
+	    'contact',
+        "rest_framework",
+        "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -130,14 +133,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
+
     "DEFAULT_AUTHENTICATION_CLASSES": (
+
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+
     ),
+
     "DEFAULT_FILTER_BACKENDS": (
+
         "django_filters.rest_framework.DjangoFilterBackend",
+
     ),
+
+    "DEFAULT_RENDERER_CLASSES": (
+
+        "rest_framework.renderers.JSONRenderer",
+
+    ),
+
 }
 
 # Email configuration - development
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@vrp.local"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
+]

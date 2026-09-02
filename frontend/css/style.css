@@ -75,3 +75,34 @@ footer {
     padding: 20px;
     margin-top: 40px;
 }
+
+.vehicles {
+    padding: 50px 40px;
+    text-align: center;
+}
+
+#vehicle-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.vehicle-card {
+    background: white;
+    padding: 20px;
+    width: 250px;
+    text-align: left;
+}
+
+.vehicle-card h3 {
+    margin-top: 0;
+}
+
+.vehicle-card button {
+    padding: 8px 15px;
+    background: #222;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
