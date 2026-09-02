@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +28,48 @@
 
         <h1>Available Vehicles</h1>
 
+
+        <div class="vehicle-filters">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search vehicle..."
+            >
+
+            <select id="vehicle-type">
+
+                <option value="">All Types</option>
+
+                <option value="2W">
+                    2 Wheeler
+                </option>
+
+                <option value="3W">
+                    3 Wheeler
+                </option>
+
+                <option value="4W">
+                    4 Wheeler
+                </option>
+
+            </select>
+
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Location..."
+            >
+
+
+            <button id="filter-button">
+                Search
+            </button>
+
+        </div>
+
+
         <div id="vehicle-list">
 
             <p>Loading vehicles...</p>
@@ -40,3 +83,4 @@
 
 </body>
 </html>
+```
