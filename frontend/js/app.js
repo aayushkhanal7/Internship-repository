@@ -14,42 +14,62 @@ function loadVehicles() {
     let url = "http://127.0.0.1:8000/api/vehicles/";
 
 
-    const searchInput = document.getElementById("search");
-    const typeInput = document.getElementById("vehicle-type");
-    const locationInput = document.getElementById("location");
+    const searchInput =
+        document.getElementById("search");
+
+    const typeInput =
+        document.getElementById("vehicle-type");
+
+    const locationInput =
+        document.getElementById("location");
 
 
     let params = [];
 
 
     // Search by vehicle name or brand
-    if (searchInput && searchInput.value.trim() !== "") {
+    if (
+        searchInput &&
+        searchInput.value.trim() !== ""
+    ) {
 
         params.push(
             "search=" +
-            encodeURIComponent(searchInput.value.trim())
+            encodeURIComponent(
+                searchInput.value.trim()
+            )
         );
 
     }
 
 
     // Filter by vehicle type
-    if (typeInput && typeInput.value !== "") {
+    if (
+        typeInput &&
+        typeInput.value !== ""
+    ) {
 
         params.push(
             "vehicle_type=" +
-            encodeURIComponent(typeInput.value)
+            encodeURIComponent(
+                typeInput.value
+            )
         );
 
     }
 
 
     // Filter by location
-    if (locationInput && locationInput.value.trim() !== "") {
+    if (
+        locationInput &&
+        locationInput.value.trim() !== ""
+    ) {
 
         params.push(
             "location=" +
-            encodeURIComponent(locationInput.value.trim())
+            encodeURIComponent(
+                locationInput.value.trim()
+            )
         );
 
     }
@@ -79,137 +99,142 @@ function loadVehicles() {
 
         headers: {
 
-            "Authorization": `Bearer ${token}`
+            "Authorization":
+                `Bearer ${token}`
 
         }
 
     })
 
+    .then(response => {
 
-        // Convert response to JSON
-        .then(response => {
+        if (response.status === 401) {
 
-            if (response.status === 401) {
+            throw new Error(
+                "You must login to view vehicles."
+            );
 
-                throw new Error(
-                    "You must login to view vehicles."
-                );
-
-            }
+        }
 
 
-            if (!response.ok) {
+        if (!response.ok) {
 
-                throw new Error(
-                    "Failed to load vehicles."
-                );
+            throw new Error(
+                "Failed to load vehicles."
+            );
 
-            }
-
-
-            return response.json();
-
-        })
+        }
 
 
-        // Display vehicles
-        .then(data => {
+        return response.json();
 
-            vehicleList.innerHTML = "";
-
-
-            // Check if no vehicles were found
-            if (data.length === 0) {
-
-                vehicleList.innerHTML =
-                    "<p>No vehicles found.</p>";
-
-                return;
-
-            }
+    })
 
 
-            // Create a card for every vehicle
-            data.forEach(vehicle => {
+    // Display vehicles
+    .then(data => {
 
-                const card =
-                    document.createElement("div");
-
-
-                card.className =
-                    "vehicle-card";
+        vehicleList.innerHTML = "";
 
 
-                card.innerHTML = `
-                    <h3>${vehicle.name}</h3>
+        // Check if no vehicles were found
+        if (data.length === 0) {
 
-                    <p>
-                        Type:
-                        ${vehicle.vehicle_type}
-                    </p>
+            vehicleList.innerHTML =
+                "<p>No vehicles found.</p>";
 
-                    <p>
-                        Price:
-                        NPR ${vehicle.price_per_day}
-                        / day
-                    </p>
+            return;
 
-                    <button
-                        class="book-button"
-                        data-id="${vehicle.id}"
-                    >
-                        Book Vehicle
-                    </button>
-                `;
+        }
 
 
-                vehicleList.appendChild(card);
+        // Create a card for every vehicle
+        data.forEach(vehicle => {
 
-            });
-
-
-            // Add booking button events
-            const bookButtons =
-                document.querySelectorAll(".book-button");
+            const card =
+                document.createElement("div");
 
 
-            bookButtons.forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    function() {
-
-                        const vehicleId =
-                            this.getAttribute("data-id");
+            card.className =
+                "vehicle-card";
 
 
-                        localStorage.setItem(
-                            "selected_vehicle",
-                            vehicleId
+            card.innerHTML = `
+
+                <h3>${vehicle.name}</h3>
+
+                <p>
+                    Type:
+                    ${vehicle.vehicle_type}
+                </p>
+
+                <p>
+                    Price:
+                    NPR ${vehicle.price_per_day}
+                    / day
+                </p>
+
+                <button
+                    class="book-button"
+                    data-id="${vehicle.id}"
+                >
+                    Book Vehicle
+                </button>
+
+            `;
+
+
+            vehicleList.appendChild(card);
+
+        });
+
+
+        // Add booking button events
+        const bookButtons =
+            document.querySelectorAll(
+                ".book-button"
+            );
+
+
+        bookButtons.forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    const vehicleId =
+                        this.getAttribute(
+                            "data-id"
                         );
 
 
-                        window.location.href =
-                            "booking.html";
-
-                    }
-                );
-
-            });
-
-        })
+                    localStorage.setItem(
+                        "selected_vehicle",
+                        vehicleId
+                    );
 
 
-        // Handle errors
-        .catch(error => {
+                    window.location.href =
+                        "booking.html";
 
-            console.log(error);
-
-
-            vehicleList.innerHTML =
-                `<p>${error.message}</p>`;
+                }
+            );
 
         });
+
+    })
+
+
+    // Handle errors
+    .catch(error => {
+
+        console.log(error);
+
+
+        vehicleList.innerHTML =
+            `<p>${error.message}</p>`;
+
+    });
 
 }
 
@@ -278,11 +303,15 @@ if (loginForm) {
 
 
             const email =
-                document.getElementById("email").value;
+                document.getElementById(
+                    "email"
+                ).value;
 
 
             const password =
-                document.getElementById("password").value;
+                document.getElementById(
+                    "password"
+                ).value;
 
 
             const message =
@@ -320,69 +349,69 @@ if (loginForm) {
             )
 
 
-                // Convert response to JSON
-                .then(response => {
+            // Convert response to JSON
+            .then(response => {
 
-                    return response.json();
+                return response.json();
 
-                })
+            })
 
 
-                // Handle login response
-                .then(data => {
+            // Handle login response
+            .then(data => {
 
-                    if (data.access) {
+                if (data.access) {
 
-                        // Save JWT access token
+                    // Save JWT access token
+                    localStorage.setItem(
+                        "access_token",
+                        data.access
+                    );
+
+
+                    // Save refresh token if provided
+                    if (data.refresh) {
+
                         localStorage.setItem(
-                            "access_token",
-                            data.access
+                            "refresh_token",
+                            data.refresh
                         );
 
-
-                        // Save refresh token if provided
-                        if (data.refresh) {
-
-                            localStorage.setItem(
-                                "refresh_token",
-                                data.refresh
-                            );
-
-                        }
-
-
-                        message.textContent =
-                            "Login successful!";
-
-
-                        // Go to vehicles page
-                        window.location.href =
-                            "vehicles.html";
-
                     }
-
-
-                    else {
-
-                        message.textContent =
-                            data.detail ||
-                            "Login failed.";
-
-                    }
-
-                })
-
-
-                // Handle login errors
-                .catch(error => {
-
-                    console.log(error);
 
 
                     message.textContent =
-                        "Something went wrong.";
+                        "Login successful!";
 
-                });
+
+                    // Go to vehicles page
+                    window.location.href =
+                        "vehicles.html";
+
+                }
+
+
+                else {
+
+                    message.textContent =
+                        data.detail ||
+                        "Login failed.";
+
+                }
+
+            })
+
+
+            // Handle login errors
+            .catch(error => {
+
+                console.log(error);
+
+
+                message.textContent =
+                    "Something went wrong.";
+
+            });
 
         }
     );
@@ -395,7 +424,9 @@ if (loginForm) {
 // ==========================================
 
 const logoutButton =
-    document.getElementById("logout-button");
+    document.getElementById(
+        "logout-button"
+    );
 
 
 if (logoutButton) {
@@ -433,7 +464,9 @@ if (logoutButton) {
 // ==========================================
 
 const token =
-    localStorage.getItem("access_token");
+    localStorage.getItem(
+        "access_token"
+    );
 
 
 const currentPage =
@@ -501,3 +534,405 @@ if (loginLink && token) {
 
 }
 
+
+// ==========================================
+// BOOKING PAGE
+// ==========================================
+
+const selectedVehicle =
+    document.getElementById(
+        "selected-vehicle"
+    );
+
+
+if (selectedVehicle) {
+
+    const token =
+        localStorage.getItem(
+            "access_token"
+        );
+
+
+    const vehicleId =
+        localStorage.getItem(
+            "selected_vehicle"
+        );
+
+
+    if (!token) {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    if (!vehicleId) {
+
+        selectedVehicle.innerHTML =
+            "<p>No vehicle selected.</p>";
+
+    }
+
+
+    else {
+
+        fetch(
+            `http://127.0.0.1:8000/api/vehicles/${vehicleId}/`,
+            {
+
+                method: "GET",
+
+                headers: {
+
+                    "Authorization":
+                        `Bearer ${token}`
+
+                }
+
+            }
+        )
+
+        .then(response => {
+
+            if (response.status === 401) {
+
+                throw new Error(
+                    "Your login session has expired. Please login again."
+                );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load vehicle."
+                );
+
+            }
+
+
+            return response.json();
+
+        })
+
+        .then(vehicle => {
+
+            selectedVehicle.innerHTML = `
+
+                <h2>${vehicle.name}</h2>
+
+                <p>
+                    Type:
+                    ${vehicle.vehicle_type}
+                </p>
+
+                <p>
+                    Price:
+                    NPR ${vehicle.price_per_day}
+                    / day
+                </p>
+
+            `;
+
+        })
+
+        .catch(error => {
+
+            console.log(error);
+
+
+            selectedVehicle.innerHTML =
+                `<p>${error.message}</p>`;
+
+        });
+
+    }
+
+}
+
+
+// ==========================================
+// CREATE BOOKING
+// ==========================================
+
+const bookingForm =
+    document.getElementById(
+        "booking-form"
+    );
+
+
+if (bookingForm) {
+
+    bookingForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const token =
+                localStorage.getItem(
+                    "access_token"
+                );
+
+
+            const vehicleId =
+                localStorage.getItem(
+                    "selected_vehicle"
+                );
+
+
+            const startDate =
+                document.getElementById(
+                    "start-date"
+                ).value;
+
+
+            const endDate =
+                document.getElementById(
+                    "end-date"
+                ).value;
+
+
+            const message =
+                document.getElementById(
+                    "booking-message"
+                );
+
+
+            message.textContent =
+                "Creating booking...";
+
+
+            fetch(
+                "http://127.0.0.1:8000/api/bookings/",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    },
+
+                    body: JSON.stringify({
+
+                        vehicle: vehicleId,
+
+                        start_date: startDate,
+
+                        end_date: endDate
+
+                    })
+
+                }
+            )
+
+            .then(response => {
+
+                return response.json().then(data => ({
+
+                    status: response.status,
+
+                    data: data
+
+                }));
+
+            })
+
+            .then(result => {
+
+                const data = result.data;
+
+
+                // Successful booking
+                if (result.status === 201) {
+
+                    message.textContent =
+                        "Booking created successfully!";
+
+                }
+
+
+                // Django validation error
+                else if (data.non_field_errors) {
+
+                    message.textContent =
+                        data.non_field_errors[0];
+
+                }
+
+
+                // Other API error
+                else if (data.detail) {
+
+                    message.textContent =
+                        data.detail;
+
+                }
+
+
+                // Other validation errors
+                else {
+
+                    const errors =
+                        Object.values(data);
+
+                    if (errors.length > 0) {
+
+                        message.textContent =
+                            errors[0];
+
+                    }
+
+                    else {
+
+                        message.textContent =
+                            "Booking failed.";
+
+                    }
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+
+                message.textContent =
+                    "Something went wrong.";
+
+            });
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// REGISTER
+// ==========================================
+
+const registerForm =
+    document.getElementById("register-form");
+
+
+if (registerForm) {
+
+    registerForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const firstName =
+                document.getElementById("first-name").value;
+
+            const lastName =
+                document.getElementById("last-name").value;
+
+            const email =
+                document.getElementById("register-email").value;
+
+            const password =
+                document.getElementById("register-password").value;
+
+            const message =
+                document.getElementById(
+                    "register-message"
+                );
+
+
+            message.textContent =
+                "Creating account...";
+
+
+            fetch(
+                "http://127.0.0.1:8000/api/users/register/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        first_name: firstName,
+
+                        last_name: lastName,
+
+                        email: email,
+
+                        password: password
+
+                    })
+                }
+            )
+
+
+            .then(response => {
+
+                return response.json();
+
+            })
+
+
+            .then(data => {
+
+                if (data.id) {
+
+                    message.textContent =
+                        "Registration successful!";
+
+                }
+
+                else {
+
+                    const errors =
+                        Object.values(data);
+
+                    if (errors.length > 0) {
+
+                        message.textContent =
+                            errors[0];
+
+                    }
+
+                    else {
+
+                        message.textContent =
+                            "Registration failed.";
+
+                    }
+
+                }
+
+            })
+
+
+            .catch(error => {
+
+                console.log(error);
+
+                message.textContent =
+                    "Something went wrong.";
+
+            });
+
+        }
+    );
+
+}
