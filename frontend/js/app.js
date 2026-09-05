@@ -1130,3 +1130,118 @@ if (bookingList) {
     }
 
 }
+
+
+
+// ==========================================
+// CONTACT FORM
+// ==========================================
+
+const contactForm =
+    document.getElementById("contact-form");
+
+
+if (contactForm) {
+
+    contactForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            const name =
+                document.getElementById("contact-name").value;
+
+            const email =
+                document.getElementById("contact-email").value;
+
+            const subject =
+                document.getElementById("contact-subject").value;
+
+            const message =
+                document.getElementById("contact-message").value;
+
+            const responseMessage =
+                document.getElementById("contact-response");
+
+            responseMessage.textContent =
+                "Sending message...";
+
+
+            fetch(
+                "http://127.0.0.1:8000/api/contact/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        email: email,
+
+                        subject: subject,
+
+                        message: message
+
+                    })
+                }
+            )
+
+            .then(response => {
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                if (data.id) {
+
+                    responseMessage.textContent =
+                        "Message sent successfully!";
+
+                    contactForm.reset();
+
+                }
+
+                else {
+
+                    const errors =
+                        Object.values(data);
+
+                    if (errors.length > 0) {
+
+                        responseMessage.textContent =
+                            errors[0];
+
+                    }
+
+                    else {
+
+                        responseMessage.textContent =
+                            "Unable to send message.";
+
+                    }
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+                responseMessage.textContent =
+                    "Something went wrong.";
+
+            });
+
+        }
+    );
+
+}
