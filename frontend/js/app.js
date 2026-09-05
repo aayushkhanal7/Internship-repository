@@ -936,3 +936,197 @@ if (registerForm) {
     );
 
 }
+
+// ==========================================
+// MY BOOKINGS
+// ==========================================
+
+const bookingList =
+    document.getElementById("booking-list");
+
+
+if (bookingList) {
+
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+
+        bookingList.innerHTML =
+            "<p>Please login to view your bookings.</p>";
+
+    }
+
+    else {
+
+        fetch(
+            "http://127.0.0.1:8000/api/bookings/",
+            {
+                method: "GET",
+
+                headers: {
+                    "Authorization":
+                        "Bearer " + token
+                }
+            }
+        )
+
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Failed to load bookings.");
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            if (data.length === 0) {
+
+                bookingList.innerHTML =
+                    "<p>You have no bookings yet.</p>";
+
+                return;
+            }
+
+
+            bookingList.innerHTML = "";
+
+
+            data.forEach(booking => {
+
+                const bookingItem =
+                    document.createElement("div");
+
+                bookingItem.className =
+                    "booking-item";
+
+                bookingItem.innerHTML = `
+
+                    <h3>
+                        ${booking.vehicle_name}
+                    </h3>
+
+                    <p>
+                        Start Date:
+                        ${booking.start_date}
+                    </p>
+
+                    <p>
+                        End Date:
+                        ${booking.end_date}
+                    </p>
+
+                    <p>
+                        Total Price:
+                        NPR ${booking.total_price}
+                    </p>
+
+                    <p>
+                        Status:
+                        ${booking.status}
+                    </p>
+
+                `;
+
+
+                if (booking.status !== "CANCELLED") {
+
+                    const cancelButton =
+                        document.createElement("button");
+
+                    cancelButton.textContent =
+                        "Cancel Booking";
+
+
+                    cancelButton.addEventListener(
+                        "click",
+                        function() {
+
+                            const confirmCancel =
+                                confirm(
+                                    "Are you sure you want to cancel this booking?"
+                                );
+
+
+                            if (!confirmCancel) {
+                                return;
+                            }
+
+
+                            fetch(
+                                `http://127.0.0.1:8000/api/bookings/${booking.id}/cancel/`,
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Authorization":
+                                            "Bearer " + token
+                                    }
+                                }
+                            )
+
+                            .then(response => {
+
+                                if (!response.ok) {
+                                    throw new Error(
+                                        "Failed to cancel booking."
+                                    );
+                                }
+
+                                return response.json();
+
+                            })
+
+                            .then(data => {
+
+                                alert(
+                                    "Booking cancelled successfully."
+                                );
+
+                                location.reload();
+
+                            })
+
+                            .catch(error => {
+
+                                console.log(error);
+
+                                alert(
+                                    "Unable to cancel booking."
+                                );
+
+                            });
+
+                        }
+                    );
+
+
+                    bookingItem.appendChild(
+                        cancelButton
+                    );
+
+                }
+
+
+                bookingList.appendChild(
+                    bookingItem
+                );
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.log(error);
+
+            bookingList.innerHTML =
+                "<p>Unable to load bookings.</p>";
+
+        });
+
+    }
+
+}
