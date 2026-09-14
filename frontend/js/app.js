@@ -1,4 +1,3 @@
-
 // ==========================================
 // VEHICLE LISTING AND FILTERING
 // ==========================================
@@ -11,7 +10,7 @@ function loadVehicles() {
 
     const token = localStorage.getItem("access_token");
 
-    let url = "http://127.0.0.1:8000/api/vehicles/";
+    let url = "https://vrp-backend-9y19.onrender.com/api/vehicles/";
 
 
     const searchInput =
@@ -325,7 +324,7 @@ if (loginForm) {
 
 
             fetch(
-                "http://127.0.0.1:8000/api/users/login/",
+                "https://vrp-backend-9y19.onrender.com/api/users/login/",
                 {
 
                     method: "POST",
@@ -578,7 +577,7 @@ if (selectedVehicle) {
     else {
 
         fetch(
-            `http://127.0.0.1:8000/api/vehicles/${vehicleId}/`,
+            `https://vrp-backend-9y19.onrender.com/api/vehicles/${vehicleId}/`,
             {
 
                 method: "GET",
@@ -707,7 +706,7 @@ if (bookingForm) {
 
 
             fetch(
-                "http://127.0.0.1:8000/api/bookings/",
+                "https://vrp-backend-9y19.onrender.com/api/bookings/",
                 {
 
                     method: "POST",
@@ -859,7 +858,7 @@ if (registerForm) {
 
 
             fetch(
-                "http://127.0.0.1:8000/api/users/register/",
+                "https://vrp-backend-9y19.onrender.com/api/users/register/",
                 {
                     method: "POST",
 
@@ -937,6 +936,7 @@ if (registerForm) {
 
 }
 
+
 // ==========================================
 // MY BOOKINGS
 // ==========================================
@@ -959,7 +959,7 @@ if (bookingList) {
     else {
 
         fetch(
-            "http://127.0.0.1:8000/api/bookings/",
+            "https://vrp-backend-9y19.onrender.com/api/bookings/",
             {
                 method: "GET",
 
@@ -1056,7 +1056,7 @@ if (bookingList) {
 
 
                             fetch(
-                                `http://127.0.0.1:8000/api/bookings/${booking.id}/cancel/`,
+                                `https://vrp-backend-9y19.onrender.com/api/bookings/${booking.id}/cancel/`,
                                 {
                                     method: "POST",
 
@@ -1169,7 +1169,7 @@ if (contactForm) {
 
 
             fetch(
-                "http://127.0.0.1:8000/api/contact/",
+                "https://vrp-backend-9y19.onrender.com/api/contact/",
                 {
                     method: "POST",
 
